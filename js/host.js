@@ -55,10 +55,13 @@ function handleGuestMessage(data) {
 startHostConnection();
 
 function handleNewGuest(guest) {
+	console.log("before", playerList);
+
 	playerList[guest.playerId] = {
 		name: guest.playerName,
 		color: guest.playerColor,
 	};
+	console.log("after", playerList);
 	sendPlayerList();
 }
 
