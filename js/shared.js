@@ -22,12 +22,20 @@ document
 		body.appendChild(scriptTag);
 		document.getElementById("choice-blocker").style.display = "none";
 	});
-
+function renderNotification(notificationMessage) {
+	let chatLog = document.getElementById("chat-log");
+	let messageDiv = document.createElement("div");
+	let notifSpan = document.createElement("span");
+	notifSpan.className = "notification-message";
+	notifSpan.innerText = notificationMessage;
+	messageDiv.appendChild(notifSpan);
+	chatLog.appendChild(messageDiv);
+}
 function generateRandomName() {
 	let adjectives = [
 		"Fast",
 		"Quick",
-		"Awesome",
+		"Nice",
 		"Loud",
 		"Cool",
 		"Yellow",
@@ -41,7 +49,7 @@ function generateRandomName() {
 		"Shark",
 		"Pigeon",
 		"Dove",
-		"Elephant",
+		"Camel",
 		"Monkey",
 		"Pangolin",
 	];

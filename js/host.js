@@ -1,13 +1,22 @@
 var peer;
 var conn;
 var selfName = "";
-var guests = {};
+var playerList = {};
 var selfId = "";
+
+selfName = generateRandomName();
+document.getElementById("self-name-input").value = selfName;
+
 const startHostConnection = () => {
 	peer = new Peer();
 	peer.on("open", (id) => {
 		selfId = id;
 		document.getElementById("game-id").innerText = selfId;
+		playerList[selfId] = {
+			name: selfName,
+			color: "blue",
+		};
+		renderPlayerTable();
 	});
 	peer.on("connection", (c) => {
 		conn = c;
@@ -45,24 +54,13 @@ function handleGuestMessage(data) {
 startHostConnection();
 
 function handleNewGuest(guest) {
-	guests[guest.playerId] = {
+	playerList[guest.playerId] = {
 		name: guest.playerName,
 		color: guest.playerColor,
 	};
-	let tableSide = "blue-player-list";
-	if (guest.playerColor.includes("red")) {
-		tableSide = "red-player-list";
-	}
-	let playerNameDiv = document.createElement("div");
-	playerNameDiv.innerText = guest.playerName;
-	document.getElementById(tableSide).appendChild(playerNameDiv);
-	console.log(guests);
+	sendPlayerList();
 }
-selfName = generateRandomName();
-document.getElementById("self-name-input").value = selfName;
-let tempDiv = document.createElement("div");
-tempDiv.innerText = selfName;
-document.getElementById("blue-player-list").appendChild(tempDiv);
+
 document
 	.getElementById("new-char-image")
 	.addEventListener("change", function (event) {
@@ -101,16 +99,16 @@ document
 		messageInput.value = "";
 	});
 
-function sendMessageAsHost(messageString) {
+function sendMessageAsHost(messageString, color = "blue") {
 	renderMessage({
 		playerName: selfName,
-		playerColor: "blue",
+		playerColor: color,
 		message: messageString,
 	});
 	conn.send({
 		type: "chatMessage",
 		playerName: selfName,
-		playerColor: "blue",
+		playerColor: color,
 		message: messageString,
 	});
 }
@@ -129,6 +127,7 @@ function renderMessage(data) {
 	messageDiv.appendChild(textSpan);
 	chatLog.appendChild(messageDiv);
 }
+
 async function addCharacter(nameInput, photoInput) {
 	let file = photoInput.files[0];
 	let blob = new Blob(photoInput.files, { type: file.type });
@@ -201,6 +200,41 @@ function getSelfInfo() {
 		playerColor: "blue",
 		playerId: selfId,
 	};
+}
+
+document
+	.getElementById("self-name-input")
+	.addEventListener("focusout", function (event) {
+		let previousName = selfName;
+		if (!event.target.value) {
+			selfName = generateRandomName();
+			event.target.value = selfName;
+		}
+		selfName = event.target.value;
+		renderNotification(previousName + " changed name to " + selfName);
+		sendPlayerList();
+	});
+
+function sendPlayerList() {
+	conn.send({
+		type: "playerList",
+		list: playerList,
+	});
+	renderPlayerTable();
+}
+
+function renderPlayerTable() {
+	for (let [key, data] of Object.entries(playerList)) {
+		let playerDiv = document.createElement("div");
+		playerDiv.innerText = data.name;
+		let blueList = document.getElementById("blue-player-list");
+		let redList = document.getElementById("red-player-list");
+		if (data.color.includes("red")) {
+			redList.appendChild(playerDiv);
+		} else {
+			blueList.appendChild(playerDiv);
+		}
+	}
 }
 /* guest code */
 /*peer.on("connection", (conn) => {

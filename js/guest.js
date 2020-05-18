@@ -15,6 +15,9 @@ peer.on("open", (id) => {
 			if (data.type.includes("chatMessage")) {
 				renderMessage(data);
 			}
+			if (data.type.includes("playerList")) {
+				renderPlayerTable(data.list);
+			}
 		});
 		// Send messages
 		conn.send("Hello!");
@@ -57,6 +60,19 @@ function sendMessageAsGuest(messageString) {
 		playerColor: "red",
 		message: messageString,
 	});
+}
+function renderPlayerTable(playerList) {
+	for (let [key, data] of Object.entries(playerList)) {
+		let playerDiv = document.createElement("div");
+		playerDiv.innerText = data.name;
+		let blueList = document.getElementById("blue-player-list");
+		let redList = document.getElementById("red-player-list");
+		if (data.color.includes("red")) {
+			redList.appendChild(playerDiv);
+		} else {
+			blueList.appendChild(playerDiv);
+		}
+	}
 }
 /*peer.on("connection", (conn) => {
 	conn.on("open", function () {
