@@ -19,8 +19,12 @@ peer.on("open", (id) => {
 				renderPlayerTable(data.list);
 			}
 		});
-		// Send messages
-		conn.send("Hello!");
+		// Notify host you connected
+		conn.send({
+			type: "guestJoined",
+			playerName: selfName,
+			playerColor: "red",
+		});
 	});
 });
 
