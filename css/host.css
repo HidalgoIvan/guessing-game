@@ -282,6 +282,7 @@ label {
 
 .chat-section {
 	height: 100%;
+	overflow: hidden;
 }
 
 #choice-blocker {
