@@ -23,6 +23,9 @@ const startHostConnection = () => {
 			});
 		});
 	});
+	peer.on("error", function (err) {
+		console.log("Peer had an error: ", err);
+	});
 };
 
 function handleGuestMessage(data) {
