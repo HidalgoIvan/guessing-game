@@ -67,13 +67,13 @@ function sendMessageAsGuest(messageString) {
 	});
 }
 function renderPlayerTable(playerList) {
+	let blueList = document.getElementById("blue-player-list");
+	let redList = document.getElementById("red-player-list");
+	blueList.innerHTML = "";
+	redList.innerHTML = "";
 	for (let [key, data] of Object.entries(playerList)) {
 		let playerDiv = document.createElement("div");
 		playerDiv.innerText = data.name;
-		let blueList = document.getElementById("blue-player-list");
-		let redList = document.getElementById("red-player-list");
-		blueList.innerHTML = "";
-		redList.innerHTML = "";
 		if (data.color.includes("red")) {
 			redList.appendChild(playerDiv);
 		} else {
