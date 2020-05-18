@@ -23,6 +23,7 @@ const startHostConnection = () => {
 		conn.on("open", function () {
 			// Receive messages
 			conn.on("data", (data) => {
+				console.log(data);
 				if (data.type.includes("guestJoined")) {
 					handleNewGuest(data);
 				}
