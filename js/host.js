@@ -23,7 +23,6 @@ const startHostConnection = () => {
 		conn.on("open", function () {
 			// Receive messages
 			conn.on("data", (data) => {
-				console.log(data);
 				if (data.type.includes("guestJoined")) {
 					handleNewGuest(data);
 				}
@@ -55,13 +54,10 @@ function handleGuestMessage(data) {
 startHostConnection();
 
 function handleNewGuest(guest) {
-	console.log("before", playerList);
-
 	playerList[guest.playerId] = {
 		name: guest.playerName,
 		color: guest.playerColor,
 	};
-	console.log("after", playerList);
 	sendPlayerList();
 }
 
@@ -229,13 +225,13 @@ function sendPlayerList() {
 }
 
 function renderPlayerTable() {
+	let blueList = document.getElementById("blue-player-list");
+	let redList = document.getElementById("red-player-list");
+	blueList.innerHTML = "";
+	redList.innerHTML = "";
 	for (let [key, data] of Object.entries(playerList)) {
 		let playerDiv = document.createElement("div");
 		playerDiv.innerText = data.name;
-		let blueList = document.getElementById("blue-player-list");
-		let redList = document.getElementById("red-player-list");
-		blueList.innerHTML = "";
-		redList.innerHTML = "";
 		if (data.color.includes("red")) {
 			redList.appendChild(playerDiv);
 		} else {
