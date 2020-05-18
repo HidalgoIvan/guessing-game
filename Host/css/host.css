@@ -1,0 +1,333 @@
+@import url("https://fonts.googleapis.com/css2?family=Mali:wght@500&display=swap");
+* {
+	font-family: "Mali", cursive;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #ff9d0a;
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	flex-direction: column;
+}
+
+form {
+	align-items: center;
+	text-align: center;
+}
+
+form > * {
+	padding-bottom: 15px;
+}
+
+label {
+	cursor: pointer;
+}
+
+.game-id-container {
+	font-size: 1.4em;
+	text-align: center;
+}
+
+.game-id-label {
+	margin-right: 5px;
+}
+
+.main-content-wrapper {
+	width: 100%;
+	height: 100%;
+	display: flex;
+}
+
+#left-menu {
+	background: linear-gradient(
+		90deg,
+		rgb(29, 29, 29),
+		rgb(41, 41, 41),
+		rgb(29, 29, 29)
+	);
+	padding: 10px 15px;
+	width: fit-content;
+	min-width: 250px;
+	display: flex;
+	flex-direction: column;
+	font-size: 1em;
+	color: white;
+	transition-duration: 0.3s;
+}
+
+#new-char-image {
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+
+#new-char-image-label {
+	display: flex;
+	padding: 5px 15px;
+	background-color: #05c9fa;
+	align-items: center;
+	width: fit-content;
+	margin: 0 auto;
+	border-radius: 5px;
+}
+
+#new-char-name {
+	border-radius: 100px;
+	padding: 0 15px;
+	margin-left: 10px;
+	width: 40%;
+	font-size: 1em;
+}
+
+.new-char-name-wrapper {
+	font-size: 1.3em;
+}
+
+.upload-icon {
+	width: 25px;
+	height: 25px;
+	background-image: url("../img/upload.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	clip-path: polygon(95% 5%, 95% 95%, 5% 95%, 5% 5%);
+	margin-right: 10px;
+}
+
+.form-title {
+	font-size: 1.4em;
+}
+
+#submit-form-button {
+	background-color: #65d602;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	height: 35px;
+	padding: 7px 15px;
+	cursor: pointer;
+}
+
+.image-upload-wrapper {
+	display: flex;
+	justify-content: space-around;
+}
+
+#game-board {
+	width: 100%;
+	height: 100%;
+}
+
+#character-cards {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+
+.character-card {
+	width: 20%;
+	height: 40%;
+	background-color: red;
+	display: flex;
+	flex-direction: column;
+	padding: 5px;
+}
+
+.character-photo {
+	background-image: url("../img/test.jpeg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 100%;
+	height: 100%;
+}
+
+.character-name {
+	color: white;
+	font-size: 1em;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-bottom: 5px;
+}
+.player-name-container {
+	font-size: 1.3em;
+}
+#self-name-input {
+	border-radius: 15px;
+	padding: 0 10px;
+	width: 40%;
+}
+.score-board {
+	display: flex;
+	flex-direction: column;
+}
+.score-board-titles {
+	display: flex;
+	justify-content: space-between;
+}
+.team-title {
+	text-align: left;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 5px 10px;
+}
+.blue-team-title {
+	background-color: rgb(40, 96, 250);
+	border-top-left-radius: 5px;
+}
+.red-team-title {
+	background-color: rgb(251, 60, 60);
+	border-top-right-radius: 5px;
+}
+.trophy-icon {
+	background-image: url("../img/trophy.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	padding: 5px;
+	background-position: center;
+	background-color: rgb(70, 71, 69);
+	width: 15%;
+}
+.player-list-container {
+	display: flex;
+	justify-content: space-evenly;
+}
+.player-list {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 5px 5px;
+}
+#blue-player-list {
+	background-color: rgb(81, 127, 251);
+	border-bottom-left-radius: 5px;
+}
+#red-player-list {
+	background-color: rgb(255, 100, 100);
+	text-align: right;
+	border-bottom-right-radius: 5px;
+}
+.chat-container {
+	height: 100%;
+	background-color: rgb(255, 255, 255);
+	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+}
+#chat-typer {
+	background-color: rgb(20, 131, 48);
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	height: 60px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+#message-input {
+	border-radius: 50px;
+	font-size: 1em;
+	height: 10px;
+	border: none;
+	padding-top: 20px;
+	padding-left: 15px;
+}
+.send-icon {
+	background-image: url("../img/send-icon.png");
+	height: 30px;
+	width: 30px;
+	top: 7px;
+	position: relative;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	clip-path: polygon(95% 5%, 95% 95%, 5% 95%, 5% 5%);
+}
+#send-message-icon {
+	display: flex;
+	background-color: #05c9fa;
+	border-radius: 500px;
+	width: 45px;
+	align-items: center;
+	justify-content: center;
+}
+#send-message-button {
+	width: 0;
+	height: 0;
+	display: none;
+}
+.message-form {
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+}
+#chat-log {
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+	color: black;
+	flex-grow: 1;
+}
+.blue-message {
+	color: rgb(81, 127, 251);
+}
+.red-message {
+	color: rgb(255, 100, 100);
+}
+
+.chat-section {
+	height: 100%;
+}
+
+#choice-blocker {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background: linear-gradient(rgb(29, 29, 29), rgb(47, 47, 47));
+	z-index: 10;
+	align-items: center;
+	justify-content: center;
+}
+.game-title {
+	color: rgb(253, 231, 33);
+	font-size: 3em;
+	background-color: rgb(81, 127, 251);
+	padding: 5px 15px;
+	border-radius: 50px;
+}
+#join-game-code {
+	border-radius: 500px;
+	padding: 10px 15px;
+	font-size: 1.2em;
+	text-align: center;
+}
+#host-game-button {
+	background-color: #65d602;
+}
+#host-game-button:hover {
+	background-color: #92f63a;
+}
+#join-game-button {
+	background-color: #05c9fa;
+}
+#join-game-button:hover {
+	background-color: #5fdbfa;
+}
+.pretty-button {
+	color: white;
+	border: none;
+	border-radius: 500px;
+	padding: 10px 25px;
+	font-size: 1.5em;
+	transition-duration: 0.2s;
+}
+#choice-blocker > * {
+	margin: 10px;
+}
