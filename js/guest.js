@@ -24,6 +24,7 @@ peer.on("open", (id) => {
 			type: "guestJoined",
 			playerName: selfName,
 			playerColor: "red",
+			playerId: selfId,
 		});
 	});
 });
