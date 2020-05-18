@@ -71,6 +71,8 @@ function renderPlayerTable(playerList) {
 		playerDiv.innerText = data.name;
 		let blueList = document.getElementById("blue-player-list");
 		let redList = document.getElementById("red-player-list");
+		blueList.innerHTML = "";
+		redList.innerHTML = "";
 		if (data.color.includes("red")) {
 			redList.appendChild(playerDiv);
 		} else {

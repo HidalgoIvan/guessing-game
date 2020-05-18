@@ -212,6 +212,7 @@ document
 			event.target.value = selfName;
 		}
 		selfName = event.target.value;
+		playerList[selfId].name = selfName;
 		renderNotification(previousName + " changed name to " + selfName);
 		sendPlayerList();
 	});
@@ -230,6 +231,8 @@ function renderPlayerTable() {
 		playerDiv.innerText = data.name;
 		let blueList = document.getElementById("blue-player-list");
 		let redList = document.getElementById("red-player-list");
+		blueList.innerHTML = "";
+		redList.innerHTML = "";
 		if (data.color.includes("red")) {
 			redList.appendChild(playerDiv);
 		} else {
