@@ -138,6 +138,7 @@ label {
 	display: flex;
 	flex-direction: column;
 	padding: 5px;
+	border-radius: 10px;
 }
 
 .character-photo {
@@ -156,6 +157,36 @@ label {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	padding-bottom: 5px;
+}
+
+.character-buttons {
+	display: flex;
+	justify-content: space-evenly;
+	padding: 5px 0;
+}
+
+.char-button {
+	width: 40px;
+	height: 40px;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: red;
+	border-radius: 500px;
+	filter: drop-shadow(0 5px 2px rgba(65, 65, 65, 0.507));
+	transition-duration: .2s;
+}
+
+.flip-button {
+	background-image: url("../img/flip.png");
+}
+
+.select-button {
+	background-image: url("../img/select.png");
+}
+
+.char-button:hover {
+	background-color: blue
 }
 
 .player-name-container {
@@ -374,4 +405,63 @@ label {
 
 #choice-blocker>* {
 	margin: 10px;
+}
+
+#team-chooser {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	background-color: red;
+	z-index: 9;
+	display: flex;
+	align-items: center;
+}
+
+#team-chooser-title {
+	background-color: rgb(47, 47, 47);
+	padding: 10px 25px;
+	font-size: 1.5em;
+	color: white;
+	border-radius: 500px;
+	position: absolute;
+	top: 10%;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.team-chooser-button {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	color: white;
+	font-size: 3em;
+	justify-content: center;
+	align-items: center;
+	transition-duration: .3s;
+}
+
+.team-char-icon {
+	width: 350px;
+	height: 350px;
+	background-image: url("../img/card-back.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+
+.blue-team-picker {
+	background-color: rgb(40, 96, 250);
+}
+
+.blue-team-picker:hover {
+	background-color: rgb(71, 119, 251);
+}
+
+.red-team-picker {
+	background-color: rgb(251, 60, 60);
+}
+
+.red-team-picker:hover {
+	background-color: rgb(251, 115, 115);
 }

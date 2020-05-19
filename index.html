@@ -18,6 +18,25 @@
 			</button>
 			<div id="version">V 0.0.12</div>
 		</div>
+		<div id="team-chooser">
+			<div id="team-chooser-title">
+				Connecting to host...
+			</div>
+			<div
+				class="team-chooser-button blue-team-picker"
+				onclick="chooseTeam('blue')"
+			>
+				<div class="team-char-icon"></div>
+				<div id="blue-team-player-count">...</div>
+			</div>
+			<div
+				class="team-chooser-button red-team-picker"
+				onclick="chooseTeam('red')"
+			>
+				<div class="team-char-icon"></div>
+				<div id="red-team-player-count">...</div>
+			</div>
+		</div>
 		<div class="main-content-wrapper">
 			<div id="left-menu">
 				<div class="left-menu-section">
@@ -84,7 +103,22 @@
 				</div>
 			</div>
 			<div id="game-board">
-				<div id="character-cards"></div>
+				<div id="character-cards">
+					<div class="character-card">
+						<div class="character-name">Hello</div>
+						<div class="character-photo"></div>
+						<div class="character-buttons">
+							<div
+								class="char-button flip-button"
+								onclick="flipCard(event)"
+							></div>
+							<div
+								class="char-button select-button"
+								onclick="flipCard(event)"
+							></div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>

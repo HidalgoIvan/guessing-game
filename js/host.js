@@ -1,9 +1,10 @@
 var peer;
-var conn;
 var selfName = "";
 var playerList = {};
 var selfId = "";
-
+var redPlayerCount = 0;
+var bluePlayerCount = 0;
+var connections = [];
 selfName = generateRandomName();
 document.getElementById("self-name-input").value = selfName;
 renderNotification(selfName + " joined");
@@ -16,13 +17,18 @@ const startHostConnection = () => {
 			name: selfName,
 			color: "blue",
 		};
+		bluePlayerCount++;
 		renderPlayerTable();
 	});
-	peer.on("connection", (c) => {
-		conn = c;
+	peer.on("connection", (conn) => {
+		connections.push(conn);
+
 		conn.on("open", function () {
 			// Receive messages
 			conn.on("data", (data) => {
+				if (data.type.includes("guestChoosing")) {
+					sendPlayerCount();
+				}
 				if (data.type.includes("guestJoined")) {
 					handleNewGuest(data);
 				}
@@ -43,11 +49,13 @@ function handleGuestMessage(data) {
 		playerColor: data.playerColor,
 		message: data.message,
 	});
-	conn.send({
-		type: "chatMessage",
-		playerName: data.playerName,
-		playerColor: data.playerColor,
-		message: data.message,
+	connections.forEach((conn) => {
+		conn.send({
+			type: "chatMessage",
+			playerName: data.playerName,
+			playerColor: data.playerColor,
+			message: data.message,
+		});
 	});
 }
 
@@ -58,10 +66,28 @@ function handleNewGuest(guest) {
 		name: guest.playerName,
 		color: guest.playerColor,
 	};
+
+	if (guest.playerColor.includes("red")) {
+		redPlayerCount++;
+	} else {
+		bluePlayerCount++;
+	}
+
 	let notifMessage = guest.playerName + " joined";
 	renderNotification(notifMessage);
 	sendNotification(notifMessage);
+	sendPlayerCount();
 	sendPlayerList();
+}
+
+function sendPlayerCount() {
+	connections.forEach((conn) => {
+		conn.send({
+			type: "playerCount",
+			redCount: redPlayerCount,
+			blueCount: bluePlayerCount,
+		});
+	});
 }
 
 document
@@ -108,11 +134,13 @@ function sendMessageAsHost(messageString, color = "blue") {
 		playerColor: color,
 		message: messageString,
 	});
-	conn.send({
-		type: "chatMessage",
-		playerName: selfName,
-		playerColor: color,
-		message: messageString,
+	connections.forEach((conn) => {
+		conn.send({
+			type: "chatMessage",
+			playerName: selfName,
+			playerColor: color,
+			message: messageString,
+		});
 	});
 }
 function renderMessage(data) {
@@ -134,11 +162,13 @@ function renderMessage(data) {
 async function addCharacter(nameInput, photoInput) {
 	let file = photoInput.files[0];
 	let blob = new Blob(photoInput.files, { type: file.type });
-	conn.send({
-		file: blob,
-		filename: file.name,
-		filetype: file.type,
-		name: nameInput.value,
+	connections.forEach((conn) => {
+		conn.send({
+			file: blob,
+			filename: file.name,
+			filetype: file.type,
+			name: nameInput.value,
+		});
 	});
 	/* send to players */
 	let imageString = await toBase64(photoInput.files[0]);
@@ -222,16 +252,20 @@ document
 	});
 
 function sendNotification(notifMessage) {
-	conn.send({
-		type: "notification",
-		message: notifMessage,
+	connections.forEach((conn) => {
+		conn.send({
+			type: "notification",
+			message: notifMessage,
+		});
 	});
 }
 
 function sendPlayerList() {
-	conn.send({
-		type: "playerList",
-		list: playerList,
+	connections.forEach((conn) => {
+		conn.send({
+			type: "playerList",
+			list: playerList,
+		});
 	});
 	renderPlayerTable();
 }

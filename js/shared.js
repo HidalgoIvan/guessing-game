@@ -7,6 +7,7 @@ document
 		let body = document.getElementsByTagName("BODY")[0];
 		body.appendChild(scriptTag);
 		document.getElementById("choice-blocker").style.display = "none";
+		document.getElementById("team-chooser").style.display = "none";
 	});
 document
 	.getElementById("join-game-button")
@@ -57,4 +58,17 @@ function generateRandomName() {
 		adjectives[Math.floor(Math.random() * adjectives.length)] +
 		names[Math.floor(Math.random() * names.length)]
 	);
+}
+
+function flipCard(event) {
+	console.log(event.target);
+	let card = event.target.parentElement.parentElement;
+
+	card.children[1].style.backgroundImage = "url('./img/card-back.png')";
+}
+
+function renderPlayerCount(redCount, blueCount) {
+	document.getElementById("team-chooser-title").innerText = "Choose your team";
+	document.getElementById("red-team-player-count").innerText = redCount;
+	document.getElementById("blue-team-player-count").innerText = blueCount;
 }

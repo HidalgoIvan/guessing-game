@@ -2,6 +2,8 @@ var peer = new Peer();
 var selfId;
 var selfName;
 var conn;
+var selfColor;
+var connectedToGuest = false;
 selfName = generateRandomName();
 document.getElementById("self-name-input").value = selfName;
 
@@ -10,6 +12,7 @@ peer.on("open", (id) => {
 	document.getElementById("game-id").innerText = joinedCode;
 	conn = peer.connect(joinedCode);
 	conn.on("open", function () {
+		connectedToGuest = true;
 		// Receive messages
 		conn.on("data", function (data) {
 			if (data.type.includes("chatMessage")) {
@@ -21,13 +24,13 @@ peer.on("open", (id) => {
 			if (data.type.includes("notification")) {
 				renderNotification(data.message);
 			}
+			if (data.type.includes("playerCount")) {
+				renderPlayerCount(data.redCount, data.blueCount);
+			}
 		});
-		// Notify host you connected
+		// Notify host you're in lobby
 		conn.send({
-			type: "guestJoined",
-			playerName: selfName,
-			playerColor: "red",
-			playerId: selfId,
+			type: "guestChoosing",
 		});
 	});
 });
@@ -83,6 +86,25 @@ function renderPlayerTable(playerList) {
 			blueList.appendChild(playerDiv);
 		}
 	}
+}
+
+function chooseTeam(teamColor) {
+	if (!connectedToGuest) {
+		return;
+	}
+	if (teamColor.includes("red")) {
+		selfColor = "red";
+	} else {
+		selfColor = "blue";
+	}
+	// Notify host you connected
+	conn.send({
+		type: "guestJoined",
+		playerName: selfName,
+		playerColor: selfColor,
+		playerId: selfId,
+	});
+	document.getElementById("team-chooser").style.display = "none";
 }
 /*peer.on("connection", (conn) => {
 	conn.on("open", function () {
