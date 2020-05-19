@@ -1,4 +1,5 @@
 var joinedCode = "";
+var popSound = document.getElementById("pop-sound");
 document
 	.getElementById("host-game-button")
 	.addEventListener("click", function (event) {

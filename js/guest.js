@@ -49,6 +49,7 @@ function renderMessage(data) {
 	textSpan.innerText = data.message;
 	messageDiv.appendChild(textSpan);
 	chatLog.appendChild(messageDiv);
+	popSound.play();
 }
 
 document

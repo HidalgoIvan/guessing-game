@@ -142,6 +142,7 @@ function sendMessageAsHost(messageString, color = "blue") {
 			message: messageString,
 		});
 	});
+	popSound.play();
 }
 function renderMessage(data) {
 	let chatLog = document.getElementById("chat-log");
