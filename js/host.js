@@ -6,7 +6,7 @@ var selfId = "";
 
 selfName = generateRandomName();
 document.getElementById("self-name-input").value = selfName;
-
+renderNotification(selfName + " joined");
 const startHostConnection = () => {
 	peer = new Peer();
 	peer.on("open", (id) => {
@@ -58,6 +58,9 @@ function handleNewGuest(guest) {
 		name: guest.playerName,
 		color: guest.playerColor,
 	};
+	let notifMessage = guest.playerName + " joined";
+	renderNotification(notifMessage);
+	sendNotification(notifMessage);
 	sendPlayerList();
 }
 
@@ -212,9 +215,18 @@ document
 		}
 		selfName = event.target.value;
 		playerList[selfId].name = selfName;
-		renderNotification(previousName + " changed name to " + selfName);
+		let notifMessage = previousName + " changed name to " + selfName;
+		renderNotification(notifMessage);
+		sendNotification(notifMessage);
 		sendPlayerList();
 	});
+
+function sendNotification(notifMessage) {
+	conn.send({
+		type: "notification",
+		message: notifMessage,
+	});
+}
 
 function sendPlayerList() {
 	conn.send({

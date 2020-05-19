@@ -18,6 +18,9 @@ peer.on("open", (id) => {
 			if (data.type.includes("playerList")) {
 				renderPlayerTable(data.list);
 			}
+			if (data.type.includes("notification")) {
+				renderNotification(data.message);
+			}
 		});
 		// Notify host you connected
 		conn.send({
