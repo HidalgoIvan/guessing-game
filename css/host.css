@@ -6,7 +6,7 @@
 body {
 	margin: 0;
 	padding: 0;
-	background-color: #ff9d0a;
+	background: linear-gradient(rgb(8, 98, 8), rgb(8, 110, 8), rgb(8, 98, 8));
 	height: 100vh;
 	width: 100vw;
 	display: flex;
@@ -121,6 +121,9 @@ label {
 #game-board {
 	width: 100%;
 	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 #character-cards {
@@ -128,7 +131,9 @@ label {
 	height: 100%;
 	display: flex;
 	justify-content: space-evenly;
+	align-items: center;
 	flex-wrap: wrap;
+	overflow-y: auto;
 }
 
 .character-card {
@@ -139,6 +144,7 @@ label {
 	flex-direction: column;
 	padding: 5px;
 	border-radius: 10px;
+	margin-top: 30px;
 }
 
 .character-photo {
@@ -464,4 +470,93 @@ label {
 
 .red-team-picker:hover {
 	background-color: rgb(251, 115, 115);
+}
+
+#progress-meter-wrapper {
+	background-color: rgb(32, 32, 32);
+	width: 100%;
+	height: 200px;
+	display: flex;
+}
+
+.progress-meter {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.progress-counter {
+	color: white;
+	display: flex;
+}
+
+.card-count-icon {
+	background-color: rgb(83, 82, 82);
+	width: 20px;
+	height: 30px;
+	border-radius: 5px;
+	background-image: url("../img/card-back.png");
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.progress-bar {
+	width: 95%;
+	height: 50px;
+	background-color: white;
+	border-radius: 500px;
+	margin-top: 15px;
+	border: 5px solid white;
+	display: flex;
+	overflow: hidden;
+}
+
+.progress-bar-inner {
+	height: 100%;
+	width: 0;
+	border-radius: 500px;
+	transition-duration: .3s;
+}
+
+#blue-bar {
+	background-color: rgb(40, 96, 250);
+}
+
+#red-bar {
+	background-color: rgb(251, 60, 60);
+}
+
+#counter-blue {
+	align-self: flex-start;
+	margin-left: 15px;
+}
+
+#counter-red {
+	align-self: flex-end;
+	margin-right: 15px;
+}
+
+#progress-counter-blue {
+	margin-left: 10px;
+}
+
+#progress-counter-red {
+	margin-right: 10px;
+}
+
+.progress-counter-text {
+	display: flex;
+	align-items: center;
+	font-size: 1.3em;
+}
+
+#progress-bar-wrapper-blue {
+	align-self: flex-end;
+}
+
+#progress-bar-wrapper-red {
+	align-self: flex-start;
+	justify-content: flex-end;
 }

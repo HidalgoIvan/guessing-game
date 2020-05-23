@@ -4,7 +4,8 @@ var playerList = {};
 var selfId = "";
 var redPlayerCount = 0;
 var bluePlayerCount = 0;
-var connections = [];
+var connections = {};
+var nextImgSourceId = 1;
 selfName = generateRandomName();
 document.getElementById("self-name-input").value = selfName;
 renderNotification(selfName + " joined");
@@ -21,12 +22,11 @@ const startHostConnection = () => {
 		renderPlayerTable();
 	});
 	peer.on("connection", (conn) => {
-		connections.push(conn);
-
 		conn.on("open", function () {
 			// Receive messages
 			conn.on("data", (data) => {
 				if (data.type.includes("guestChoosing")) {
+					connections[data.playerId] = { connection: conn };
 					sendPlayerCount();
 				}
 				if (data.type.includes("guestJoined")) {
@@ -35,7 +35,17 @@ const startHostConnection = () => {
 				if (data.type.includes("chatMessageFromGuest")) {
 					handleGuestMessage(data);
 				}
+				if (data.type.includes("guestChangedName")) {
+					handleGuestNameChange(data);
+				}
+				if (data.type.includes("charCardFromGuest")) {
+					handleGuestAddCard(data);
+				}
+				if (data.type.includes("guestCardFlip")) {
+					handleGuestFlip(data);
+				}
 			});
+			sendCardsToPlayer(conn);
 		});
 	});
 	peer.on("error", function (err) {
@@ -43,20 +53,96 @@ const startHostConnection = () => {
 	});
 };
 
+function handleGuestFlip(cardInfo) {
+	flipCard(
+		{
+			target: {
+				parentElement: {
+					parentElement: document.getElementById(cardInfo.cardId),
+				},
+			},
+		},
+		cardInfo.playerColor
+	);
+}
+
+function flipCard(event, color = "blue") {
+	let card = event.target.parentElement.parentElement;
+	let cardFlip = !boardCards[card.id].flipped;
+	// Card is facing down
+	if (boardCards[card.id].flipped) {
+		playSound("card-up");
+		flippedCardCount--;
+		boardCards[card.id].flipped = false;
+		card.children[1].style.backgroundImage =
+			"url(" + boardCards[card.id].image + ")";
+		if (color.includes("blue")) {
+			blueFlipCount--;
+		} else {
+			redFlipCount--;
+		}
+	}
+	// Card is facing up
+	else {
+		playSound("card-down");
+		flippedCardCount++;
+		boardCards[card.id].flipped = true;
+		card.children[1].style.backgroundImage = "url('./img/card-back.png')";
+		if (color.includes("blue")) {
+			blueFlipCount++;
+		} else {
+			redFlipCount++;
+		}
+	}
+	for (let [playerId, playerData] of Object.entries(connections)) {
+		playerData.connection.send({
+			type: "cardFlip",
+			cardId: card.id,
+			flip: cardFlip,
+			redFlipCount: redFlipCount,
+			blueFlipCount: blueFlipCount,
+		});
+	}
+	updateProgressBars();
+}
+
+function handleGuestAddCard(data) {
+	addCharacterCard(
+		data.imageString,
+		data.cardName,
+		"card-" + nextImgSourceId,
+		false
+	);
+	sendCharacterCard(
+		data.cardName,
+		data.imageString,
+		"card-" + nextImgSourceId,
+		false
+	);
+	nextImgSourceId++;
+}
+
+function handleGuestNameChange(data) {
+	playerList[data.playerId].name = data.newName;
+	sendPlayerList();
+	renderNotification(data.notifMessage);
+	sendNotification(data.notifMessage);
+}
+
 function handleGuestMessage(data) {
 	renderMessage({
 		playerName: data.playerName,
 		playerColor: data.playerColor,
 		message: data.message,
 	});
-	connections.forEach((conn) => {
-		conn.send({
+	for (let [playerId, playerData] of Object.entries(connections)) {
+		playerData.connection.send({
 			type: "chatMessage",
 			playerName: data.playerName,
 			playerColor: data.playerColor,
 			message: data.message,
 		});
-	});
+	}
 }
 
 startHostConnection();
@@ -81,13 +167,13 @@ function handleNewGuest(guest) {
 }
 
 function sendPlayerCount() {
-	connections.forEach((conn) => {
-		conn.send({
+	for (let [playerId, playerData] of Object.entries(connections)) {
+		playerData.connection.send({
 			type: "playerCount",
 			redCount: redPlayerCount,
 			blueCount: bluePlayerCount,
 		});
-	});
+	}
 }
 
 document
@@ -100,19 +186,6 @@ document
 		} else {
 			nameLabel.innerText = "Upload photo";
 		}
-	});
-
-document
-	.getElementById("submit-form-button")
-	.addEventListener("click", function (event) {
-		event.preventDefault();
-		let nameInput = document.getElementById("new-char-name");
-		let photoInput = document.getElementById("new-char-image");
-		if (!nameInput.value || !photoInput.files[0]) {
-			alert("Enter a name and a picture for the character!");
-			return;
-		}
-		addCharacter(nameInput, photoInput);
 	});
 
 document
@@ -134,15 +207,15 @@ function sendMessageAsHost(messageString, color = "blue") {
 		playerColor: color,
 		message: messageString,
 	});
-	connections.forEach((conn) => {
-		conn.send({
+	for (let [playerId, playerData] of Object.entries(connections)) {
+		playerData.connection.send({
 			type: "chatMessage",
 			playerName: selfName,
 			playerColor: color,
 			message: messageString,
 		});
-	});
-	popSound.play();
+	}
+	playSound("pop");
 }
 function renderMessage(data) {
 	let chatLog = document.getElementById("chat-log");
@@ -160,43 +233,52 @@ function renderMessage(data) {
 	chatLog.appendChild(messageDiv);
 }
 
-async function addCharacter(nameInput, photoInput) {
-	let file = photoInput.files[0];
-	let blob = new Blob(photoInput.files, { type: file.type });
-	connections.forEach((conn) => {
-		conn.send({
-			file: blob,
-			filename: file.name,
-			filetype: file.type,
-			name: nameInput.value,
+function sendCardsToPlayer(conn) {
+	conn.send({
+		type: "boardCards",
+		cards: boardCards,
+		blueFlipCount: blueFlipCount,
+		redFlipCount: redFlipCount,
+	});
+}
+
+function sendCharacterCard(name, imgSrc, cardId) {
+	for (let [playerId, playerData] of Object.entries(connections)) {
+		playerData.connection.send({
+			type: "newCharCard",
+			cardName: name,
+			imageString: imgSrc,
+			cardId: cardId,
 		});
-	});
-	/* send to players */
+	}
+}
+
+async function addCharacter(nameInput, photoInput) {
 	let imageString = await toBase64(photoInput.files[0]);
-	addCharacterCard(imageString, nameInput.value);
+	boardCards["card-" + nextImgSourceId] = {
+		image: imageString,
+		name: nameInput.value,
+		flipped: false,
+	};
+	// Send picture to players
+	for (let [playerId, playerData] of Object.entries(connections)) {
+		playerData.connection.send({
+			type: "newCharCard",
+			cardName: nameInput.value,
+			imageString: imageString,
+			cardId: "card-" + nextImgSourceId,
+			flipped: false,
+		});
+	}
+	addCharacterCard(
+		imageString,
+		nameInput.value,
+		"card-" + nextImgSourceId,
+		false
+	);
+	nextImgSourceId++;
+	updateProgressBars();
 }
-
-async function addCharacterCard(imageString, name) {
-	let frame = document.createElement("div");
-	frame.classList.add("character-card");
-	let nameLabel = document.createElement("div");
-	nameLabel.classList.add("character-name");
-	nameLabel.innerText = name;
-	frame.appendChild(nameLabel);
-	let charPhoto = document.createElement("div");
-	charPhoto.classList.add("character-photo");
-	charPhoto.style.backgroundImage = "url(" + imageString + ")";
-	frame.appendChild(charPhoto);
-	document.getElementById("character-cards").appendChild(frame);
-}
-
-const toBase64 = (file) =>
-	new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result);
-		reader.onerror = (error) => reject(error);
-	});
 
 const encode = (input) => {
 	const keyStr =
@@ -239,11 +321,14 @@ function getSelfInfo() {
 document
 	.getElementById("self-name-input")
 	.addEventListener("focusout", function (event) {
-		let previousName = selfName;
+		if (event.target.value === selfName) {
+			return;
+		}
 		if (!event.target.value) {
 			selfName = generateRandomName();
 			event.target.value = selfName;
 		}
+		let previousName = selfName;
 		selfName = event.target.value;
 		playerList[selfId].name = selfName;
 		let notifMessage = previousName + " changed name to " + selfName;
@@ -253,21 +338,21 @@ document
 	});
 
 function sendNotification(notifMessage) {
-	connections.forEach((conn) => {
-		conn.send({
+	for (let [playerId, playerData] of Object.entries(connections)) {
+		playerData.connection.send({
 			type: "notification",
 			message: notifMessage,
 		});
-	});
+	}
 }
 
 function sendPlayerList() {
-	connections.forEach((conn) => {
-		conn.send({
+	for (let [playerId, playerData] of Object.entries(connections)) {
+		playerData.connection.send({
 			type: "playerList",
 			list: playerList,
 		});
-	});
+	}
 	renderPlayerTable();
 }
 
@@ -286,18 +371,3 @@ function renderPlayerTable() {
 		}
 	}
 }
-/* guest code */
-/*peer.on("connection", (conn) => {
-	conn.on("open", function () {
-		console.log("Connection opened!");
-		// Receive messages
-		conn.on("data", (data) => {
-			console.log("Received something", data);
-			if (data.filetype.includes("image")) {
-				const bytes = new Uint8Array(data.file);
-				let imageString = "data:image/png;base64," + encode(bytes);
-				addCharacterCard(imageString, data.name);
-			}
-		});
-	});
-});*/

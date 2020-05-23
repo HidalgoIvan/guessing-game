@@ -1,5 +1,12 @@
+var boardCards = {};
 var joinedCode = "";
-var popSound = document.getElementById("pop-sound");
+var flippedCardCount = 0;
+var redFlipCount = 0;
+var blueFlipCount = 0;
+function playSound(soundName) {
+	let sound = new Audio("./sound/" + soundName + ".mp3");
+	sound.play();
+}
 document
 	.getElementById("host-game-button")
 	.addEventListener("click", function (event) {
@@ -61,15 +68,83 @@ function generateRandomName() {
 	);
 }
 
-function flipCard(event) {
-	console.log(event.target);
-	let card = event.target.parentElement.parentElement;
-
-	card.children[1].style.backgroundImage = "url('./img/card-back.png')";
-}
-
 function renderPlayerCount(redCount, blueCount) {
 	document.getElementById("team-chooser-title").innerText = "Choose your team";
 	document.getElementById("red-team-player-count").innerText = redCount;
 	document.getElementById("blue-team-player-count").innerText = blueCount;
+}
+
+function addCharacterCard(imageString, name, cardId, flipped) {
+	boardCards[cardId] = {
+		image: imageString,
+		name: name,
+		flipped: flipped,
+	};
+	let frame = document.createElement("div");
+	frame.classList.add("character-card");
+	frame.id = cardId;
+	let nameLabel = document.createElement("div");
+	nameLabel.classList.add("character-name");
+	nameLabel.innerText = name;
+	frame.appendChild(nameLabel);
+	let charPhoto = document.createElement("div");
+	charPhoto.classList.add("character-photo");
+	if (flipped) {
+		charPhoto.style.backgroundImage = "url('./img/card-back.png')";
+		flippedCardCount++;
+	} else {
+		charPhoto.style.backgroundImage = "url(" + imageString + ")";
+	}
+	frame.appendChild(charPhoto);
+	let buttonsDiv = document.createElement("div");
+	buttonsDiv.className = "character-buttons";
+	let flipButton = document.createElement("div");
+	flipButton.classList.add("char-button");
+	flipButton.classList.add("flip-button");
+	flipButton.setAttribute("onclick", "flipCard(event)");
+	buttonsDiv.appendChild(flipButton);
+	let chooseButton = document.createElement("div");
+	chooseButton.classList.add("char-button");
+	chooseButton.classList.add("select-button");
+	chooseButton.setAttribute("onclick", "flipCard(event)");
+	buttonsDiv.appendChild(chooseButton);
+	frame.appendChild(buttonsDiv);
+	document.getElementById("character-cards").appendChild(frame);
+	updateProgressBars();
+}
+
+document
+	.getElementById("submit-form-button")
+	.addEventListener("click", function (event) {
+		event.preventDefault();
+		let nameInput = document.getElementById("new-char-name");
+		let photoInput = document.getElementById("new-char-image");
+		if (!nameInput.value || !photoInput.files[0]) {
+			alert("Enter a name and a picture for the character!");
+			return;
+		}
+		addCharacter(nameInput, photoInput);
+	});
+
+const toBase64 = (file) =>
+	new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result);
+		reader.onerror = (error) => reject(error);
+	});
+
+function updateProgressBars() {
+	let redBar = document.getElementById("red-bar");
+	let blueBar = document.getElementById("blue-bar");
+	let redCounter = document.getElementById("progress-counter-red");
+	let blueCounter = document.getElementById("progress-counter-blue");
+	let totalCards = Object.keys(boardCards).length;
+	let redProgress = (redFlipCount / totalCards) * 100;
+	let blueProgress = (blueFlipCount / totalCards) * 100;
+
+	redCounter.innerText = redFlipCount + "/" + totalCards;
+	blueCounter.innerText = blueFlipCount + "/" + totalCards;
+	redBar.style.width = redProgress + "%";
+	blueBar.style.width = blueProgress + "%";
 }
