@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/guessing-game/static/css/main.5f361e03.chunk.css",
+    "main.js": "/guessing-game/static/js/main.10a14fd7.chunk.js",
+    "main.js.map": "/guessing-game/static/js/main.10a14fd7.chunk.js.map",
+    "runtime-main.js": "/guessing-game/static/js/runtime-main.24824ec8.js",
+    "runtime-main.js.map": "/guessing-game/static/js/runtime-main.24824ec8.js.map",
+    "static/js/2.ff2a5027.chunk.js": "/guessing-game/static/js/2.ff2a5027.chunk.js",
+    "static/js/2.ff2a5027.chunk.js.map": "/guessing-game/static/js/2.ff2a5027.chunk.js.map",
+    "index.html": "/guessing-game/index.html",
+    "precache-manifest.8bf2092daa6233f4a6a69776e638119e.js": "/guessing-game/precache-manifest.8bf2092daa6233f4a6a69776e638119e.js",
+    "service-worker.js": "/guessing-game/service-worker.js",
+    "static/css/main.5f361e03.chunk.css.map": "/guessing-game/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.ff2a5027.chunk.js.LICENSE.txt": "/guessing-game/static/js/2.ff2a5027.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/guessing-game/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.24824ec8.js",
+    "static/js/2.ff2a5027.chunk.js",
+    "static/css/main.5f361e03.chunk.css",
+    "static/js/main.10a14fd7.chunk.js"
+  ]
+}
