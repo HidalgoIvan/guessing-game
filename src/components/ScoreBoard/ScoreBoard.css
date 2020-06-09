@@ -1,0 +1,60 @@
+.score-board {
+    display: flex;
+    flex-direction: column;
+}
+
+.score-board-titles {
+    display: flex;
+    justify-content: space-between;
+}
+
+.team-title {
+    text-align: left;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+}
+
+.blue-team-title {
+    background-color: rgb(40, 96, 250);
+    border-top-left-radius: 5px;
+}
+
+.red-team-title {
+    background-color: rgb(251, 60, 60);
+    border-top-right-radius: 5px;
+}
+
+.trophy-icon {
+    background-image: url("../../img/trophy.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    background-position: center;
+    background-color: rgb(70, 71, 69);
+    width: 15%;
+}
+
+.player-list-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.player-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 5px 5px;
+}
+
+#blue-player-list {
+    background-color: rgb(81, 127, 251);
+    border-bottom-left-radius: 5px;
+}
+
+#red-player-list {
+    background-color: rgb(255, 100, 100);
+    text-align: right;
+    border-bottom-right-radius: 5px;
+}

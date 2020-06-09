@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Mali:wght@500&display=swap");
+body, #root, .App {
+	width: 100vw;
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+#root {
+	overflow: hidden;
+}
+
+* {
+	font-family: "Mali", cursive;
+}
+
+label {
+	cursor: pointer;
+}
+
+input[type="text"] {
+	border-radius: 50px;
+	text-align: center;
+}
+
+.pretty-button {
+	color: white;
+	border: none;
+	border-radius: 500px;
+	padding: 10px 25px;
+	font-size: 1.5em;
+	transition-duration: 0.2s;
+}
+
+#join-game-button {
+	background-color: #05c9fa;
+}
+
+#join-game-button:hover {
+	background-color: #5fdbfa;
+}
+
+#join-game-code {
+	font-size: 2em;
+}

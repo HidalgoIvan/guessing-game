@@ -1,0 +1,10 @@
+.player-name-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#playerNameInput {
+    width: 90%;
+    margin-left: 5%;
+}

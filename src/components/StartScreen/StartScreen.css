@@ -1,0 +1,36 @@
+#choice-blocker {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgb(29, 29, 29), rgb(47, 47, 47));
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+#host-game-button {
+    background-color: #65d602;
+}
+
+#host-game-button:hover {
+    background-color: #92f63a;
+}
+
+#version {
+    color: white;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+#join-game-button {
+    margin-top: 25px;
+}
+
+#start-divider {
+    font-size: 2em;
+    color: white;
+    margin: 50px 0;
+}
