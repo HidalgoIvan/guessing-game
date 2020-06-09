@@ -23,6 +23,7 @@ class App extends Component {
 			hostId: "",
 			bluePlayerCount: 0,
 			redPlayerCount: 0,
+			playerList: {},
 		};
 	}
 
@@ -44,7 +45,8 @@ class App extends Component {
 	};
 
 	getParam = (key) => {
-		return this.state[key];
+		let cosa = this.state[key];
+		return cosa;
 	};
 
 	setPlayerRole = (role) => {
@@ -79,6 +81,7 @@ class App extends Component {
 				<LeftMenu
 					showId={this.state.showId}
 					selfName={this.state.selfName}
+					playerList={this.state.playerList}
 				></LeftMenu>
 			</div>
 		);

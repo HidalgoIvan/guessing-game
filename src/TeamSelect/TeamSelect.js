@@ -3,8 +3,10 @@ import { onConnectToHost, connectToHost } from "../components/Peer/Peer";
 import {
 	setParam,
 	getParam,
+	addPlayerToList,
 } from "../components/HelperFunctions/HelperFunctions.js";
 import "./TeamSelect.css";
+import { addPlayer } from "../components/Host/Host";
 export default class TeamSelect extends Component {
 	constructor(props) {
 		super(props);
@@ -34,7 +36,17 @@ export default class TeamSelect extends Component {
 	}
 
 	chooseTeam = (team = "red") => {
-		console.log("choosing", team);
+		if (this.state.bluePlayerCount !== 0) {
+			setParam("team", team);
+			setParam("role", "playing");
+			let selfName = getParam("selfName");
+			let selfId = getParam("selfId");
+			addPlayerToList(selfId, {
+				name: selfName,
+				team: team,
+				id: selfId,
+			});
+		}
 	};
 
 	render() {
@@ -58,7 +70,10 @@ export default class TeamSelect extends Component {
 					<div className="team-char-icon"></div>
 					<div id="blue-team-player-count">{blueCount}</div>
 				</div>
-				<div className="team-chooser-button red-team-picker">
+				<div
+					className="team-chooser-button red-team-picker"
+					onClick={() => this.chooseTeam("red")}
+				>
 					<div className="team-char-icon"></div>
 					<div id="red-team-player-count">{redCount}</div>
 				</div>

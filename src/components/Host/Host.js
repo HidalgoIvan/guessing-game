@@ -19,6 +19,7 @@ export function addPlayer(player) {
 		redPlayerCount++;
 		setParam("redPlayerCount", redPlayerCount);
 	}
+	setParam("playerList", playerList);
 }
 
 export function getPlayerCount(team = "both") {

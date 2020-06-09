@@ -41,5 +41,11 @@ export function addGetParamRef(ref = () => {}) {
 }
 
 export function getParam(key = "key") {
-	getParamFun(key);
+	return getParamFun(key);
+}
+
+export function addPlayerToList(key = "", player = {}) {
+	let playerList = getParam("playerList");
+	playerList[key] = player;
+	setParam("playerList", playerList);
 }
