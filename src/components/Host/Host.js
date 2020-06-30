@@ -1,5 +1,5 @@
 import { setParam, getParam } from "../HelperFunctions/HelperFunctions.js";
-import { getSelfId } from "../Peer/Peer";
+import { getSelfId, peerSend } from "../Peer/Peer";
 let connections = {};
 let playerList = {};
 let bluePlayerCount = 0;
@@ -9,7 +9,7 @@ export function getPlayerList() {
 	return playerList;
 }
 
-export function addPlayer(player) {
+export function addPlayer(player = {}) {
 	playerList[player.id] = player;
 	if (player.team === "blue") {
 		bluePlayerCount++;
@@ -20,6 +20,10 @@ export function addPlayer(player) {
 		setParam("redPlayerCount", redPlayerCount);
 	}
 	setParam("playerList", playerList);
+	peerSend({
+		type: "playerList",
+		players: playerList,
+	});
 }
 
 export function getPlayerCount(team = "both") {
@@ -43,5 +47,3 @@ export function initializeHost() {
 		team: "blue",
 	});
 }
-
-export function addSetParamRef() {}

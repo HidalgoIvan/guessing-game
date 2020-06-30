@@ -1,6 +1,6 @@
 import Peer from "peerjs";
-import { getPlayerCount } from "../Host/Host.js";
-import { receiveLobbyData } from "../Guest/Guest.js";
+import { getPlayerCount, addPlayer } from "../Host/Host.js";
+import { receiveLobbyData, receivePlayerList } from "../Guest/Guest.js";
 const localPeer = new Peer({
 	host: "peerjs-custom-server.ih2.repl.co",
 	port: "",
@@ -24,11 +24,16 @@ localPeer.on("connection", (conn) => {
 		if (selfRole === "guest") {
 			connectedToHostCallback();
 		}
+		/*
+			HOST RECEIVER
+		*/
 		conn.on("data", function (data) {
 			if (data.type === "guestChoosing") {
-				console.log("Some guest is choosing");
-				guestConnections[data.id] = conn;
-				sendLobbyData(guestConnections[data.id]);
+				guestConnections[data.playerId] = conn;
+				sendLobbyData(guestConnections[data.playerId]);
+			}
+			if (data.type === "playerJoined") {
+				addPlayer(data.player);
 			}
 		});
 	});
@@ -70,12 +75,28 @@ export function connectToHost(hostId) {
 			type: "guestChoosing",
 			playerId: selfId,
 		});
+		/*
+			GUEST RECEIVER
+		*/
 		conn.on("data", function (data) {
 			if (data.type === "lobbyData") {
 				receiveLobbyData(data);
+			}
+			if (data.type === "playerList") {
+				receivePlayerList(data.players);
 			}
 		});
 	});
 	console.log("Trying to connect to host");
 	hostId = hostId;
+}
+
+export function peerSend(data = {}) {
+	if (selfRole === "guest") {
+		conn.send(data);
+	} else {
+		for (const [id, guestConn] of Object.entries(guestConnections)) {
+			guestConn.send(data);
+		}
+	}
 }

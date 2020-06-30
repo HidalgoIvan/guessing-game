@@ -5,4 +5,7 @@ export function receiveLobbyData(data) {
 	setParam("bluePlayerCount", data.bluePlayerCount);
 }
 
-export function chooseTeam() {}
+export function receivePlayerList(list) {
+	setParam("playerList", list);
+	console.log("Received player list: ", list);
+}

@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { onConnectToHost, connectToHost } from "../components/Peer/Peer";
+import {
+	onConnectToHost,
+	connectToHost,
+	peerSend,
+} from "../components/Peer/Peer";
 import {
 	setParam,
 	getParam,
@@ -41,10 +45,15 @@ export default class TeamSelect extends Component {
 			setParam("role", "playing");
 			let selfName = getParam("selfName");
 			let selfId = getParam("selfId");
-			addPlayerToList(selfId, {
+			let playerInfo = {
 				name: selfName,
 				team: team,
 				id: selfId,
+			};
+			addPlayerToList(selfId, playerInfo);
+			peerSend({
+				type: "playerJoined",
+				player: playerInfo,
 			});
 		}
 	};
